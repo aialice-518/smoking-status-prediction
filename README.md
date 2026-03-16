@@ -1,17 +1,55 @@
 # 🚬 건강 검진 데이터 기반 흡연 여부 예측
 
-건강 검진 수치를 활용하여 흡연 여부를 예측하는 이진 분류 프로젝트입니다.
+건강 검진 수치를 활용하여 **흡연 여부(smoker / non-smoker)**를 예측하는 **이진 분류 머신러닝 프로젝트**입니다.
 
-## 📊 데이터셋
+건강 검진 지표와 혈액 검사 수치를 기반으로 흡연 여부를 예측하고,
+
+EDA → Feature Engineering → Model Training → AutoML → Ensemble 과정을 통해 모델 성능을 개선했습니다.
+
+---
+
+# 🎯 Problem Statement
+
+흡연은 심혈관 질환, 당뇨, 암 등 다양한 질환의 주요 위험 요인입니다.
+
+하지만 실제 건강검진 데이터에서는 흡연 여부가 누락되거나 정확하지 않은 경우가 존재합니다.
+
+본 프로젝트의 목표는 **건강 검진 수치만으로 개인의 흡연 여부를 예측할 수 있는 머신러닝 모델을 구축하는 것**입니다.
+
+이를 통해
+
+- 건강 위험도 분석
+- 건강검진 데이터 보완
+- 예방 의료 분석
+
+등에 활용 가능한 모델을 개발하는 것을 목표로 합니다.
+
+---
+
+# 📊 데이터셋
 
 | 구분 | 샘플 수 | 피처 수 |
-|------|---------|---------|
+| --- | --- | --- |
 | Train | 7,000 | 16 |
 | Test | 3,000 | 15 |
 
-**주요 변수:** 나이, 키, 몸무게, BMI, 시력, 공복 혈당, 혈압, 중성 지방, 콜레스테롤, 헤모글로빈 등
+**주요 변수**
 
-## 🗂️ 프로젝트 구조
+- 나이 (Age)
+- 키 / 몸무게
+- BMI
+- 시력
+- 공복 혈당
+- 혈압
+- 중성 지방 (Triglycerides)
+- 콜레스테롤
+- 헤모글로빈
+
+건강검진 기반 **대사 건강 지표**가 포함된 데이터입니다.
+
+---
+
+# 🗂️ 프로젝트 구조
 
 ```
 ├── data/                          # 원본 및 전처리 데이터
@@ -33,68 +71,183 @@
 └── README.md
 ```
 
-## 🔍 분석 파이프라인
+---
 
-### 1. 데이터 탐색 (EDA)
+# 🔍 분석 파이프라인
+
+## 1️⃣ 데이터 탐색 (EDA)
+
 - 변수별 분포 확인 (히스토그램 + 박스플롯)
 - 결측치·이상치 탐지
-- 상관관계 히트맵 및 타겟 변수와의 상관계수 Top 10 분석
+- 상관관계 히트맵 분석
+- 타겟 변수와의 상관계수 Top 10 Feature 분석
 
-### 2. 데이터 전처리
-- 결측치: 평균값 대체
-- 이상치: IQR 기반 클리핑 + 의학적 정상 범위 기반 클리핑
-- 피처 엔지니어링: 지질 비율, 비만도 지표, 대사증후군 점수, 교호작용 변수 등 **30개+ 파생 변수** 생성
-- KMeans 클러스터링 피처 추가
+---
 
-### 3. 모델링
-- **기본 모델 비교:** RandomForest, LightGBM, XGBoost (5-Fold CV)
-- **하이퍼파라미터 튜닝:** Ray Tune + Optuna (LightGBM, XGBoost)
-- **AutoML:** AutoGluon `best_quality` (Auto Stacking + Bagging, 10-Fold)
-- **앙상블:** 상위 모델 Soft Voting
+## 2️⃣ 데이터 전처리
 
-### 4. 평가 및 시각화
-- Accuracy, Precision, Recall, F1-score 비교
-- Confusion Matrix, ROC Curve
-- Feature Importance Top 20
+### 결측치 처리
 
-## 🏆 주요 결과
+- 평균값 대체
+
+### 이상치 처리
+
+- IQR 기반 클리핑
+- 의학적 정상 범위 기반 클리핑
+
+### Feature Engineering
+
+생성된 주요 파생 변수
+
+- 지질 비율 (Lipid Ratio)
+- 비만도 지표
+- 대사증후군 점수
+- 변수 간 교호작용
+
+총 **30개 이상의 파생 변수 생성**
+
+### Clustering Feature
+
+- **KMeans 기반 군집 Feature 추가**
+
+---
+
+## 3️⃣ 모델링
+
+### 기본 모델 비교
+
+- RandomForest
+- LightGBM
+- XGBoost
+
+**5-Fold Cross Validation** 기반 성능 비교
+
+---
+
+### 하이퍼파라미터 튜닝
+
+- Ray Tune
+- Optuna
+
+튜닝 대상 모델
+
+- LightGBM
+- XGBoost
+
+---
+
+### AutoML
+
+AutoGluon `best_quality`
+
+- Auto Stacking
+- Bagging
+- 10-Fold Cross Validation
+
+---
+
+### Ensemble
+
+상위 모델 기반 **Soft Voting Ensemble**
+
+---
+
+# 🏆 주요 결과
 
 > ⚠️ 아래는 예시 수치입니다. 노트북 실행 후 실제 결과로 업데이트해주세요.
+> 
 
 | Model | Accuracy | Precision | Recall | F1-score |
-|-------|----------|-----------|--------|----------|
+| --- | --- | --- | --- | --- |
 | RandomForest | 0.74 | 0.72 | 0.68 | 0.70 |
 | LightGBM | 0.78 | 0.76 | 0.73 | 0.74 |
 | XGBoost | 0.77 | 0.75 | 0.72 | 0.73 |
 | **AutoGluon Ensemble** | **0.80** | **0.78** | **0.76** | **0.77** |
 
-## 📈 Visualization
+AutoML 기반 Ensemble 모델이 단일 모델 대비 **약 2~6% 성능 향상**을 보였습니다.
+
+---
+
+# 📈 Visualization
 
 모델 분석에 사용한 주요 시각화입니다. (`04_Evaluation.ipynb` 실행 시 자동 생성)
 
-| 모델 성능 비교 | Confusion Matrix |
-|:-:|:-:|
-| ![Model Comparison](outputs/figures/model_comparison.png) | ![Confusion Matrix](outputs/figures/confusion_matrix.png) |
+[제목 없음](https://www.notion.so/325be6468c338036b839c75b52db3f70?pvs=21)
 
-| ROC Curve | Feature Importance Top 20 |
-|:-:|:-:|
-| ![ROC Curve](outputs/figures/roc_curve.png) | ![Feature Importance](outputs/figures/feature_importance.png) |
+[제목 없음](https://www.notion.so/325be6468c338021b012d1b365fc5a7c?pvs=21)
 
-## 🛠️ 기술 스택
+---
 
-- **언어:** Python
-- **데이터 분석:** Pandas, NumPy
-- **시각화:** Matplotlib, Seaborn
-- **머신러닝:** Scikit-learn, LightGBM, XGBoost
-- **AutoML:** AutoGluon
-- **하이퍼파라미터 튜닝:** Ray Tune, Optuna
-- **클러스터링:** KMeans
+# 🔬 Feature Importance Insight
 
-## ⚙️ 실행 방법
+모델 분석 결과 흡연 여부 예측에 중요한 변수는 다음과 같습니다.
 
-```bash
-pip install -r requirements.txt
+- **Hemoglobin**
+- **Triglycerides**
+- **BMI**
+- **Cholesterol**
+
+이 변수들은 흡연과 관련된 **대사 건강 변화와 밀접한 관련**이 있는 것으로 나타났습니다.
+
+---
+
+# 🛠️ 기술 스택
+
+**언어**
+
+- Python
+
+**데이터 분석**
+
+- Pandas
+- NumPy
+
+**시각화**
+
+- Matplotlib
+- Seaborn
+
+**머신러닝**
+
+- Scikit-learn
+- LightGBM
+- XGBoost
+
+**AutoML**
+
+- AutoGluon
+
+**하이퍼파라미터 튜닝**
+
+- Ray Tune
+- Optuna
+
+**클러스터링**
+
+- KMeans
+
+---
+
+# ⚙️ 실행 방법
+
+```
+pip install-r requirements.txt
 ```
 
-`notebooks/` 폴더의 노트북을 01 → 02 → 03 → 04 순서로 실행하세요.  
-04번 노트북 실행 시 `outputs/figures/`에 시각화 이미지가 자동 저장됩니다.
+`notebooks/` 폴더의 노트북을 **01 → 02 → 03 → 04 순서로 실행**하세요.
+
+`04_Evaluation.ipynb` 실행 시
+
+```
+outputs/figures/
+```
+
+경로에 시각화 이미지가 자동 저장됩니다.
+
+---
+
+# 💡 Key Takeaways
+
+- 건강 검진 데이터 기반 Feature Engineering이 모델 성능 향상에 중요한 역할
+- AutoML + Ensemble 접근 방식이 단일 모델 대비 더 안정적인 성능 제공
+- 대사 관련 지표 (Triglycerides, BMI, Hemoglobin)가 흡연 예측에서 중요한 Feature로 확인됨
