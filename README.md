@@ -229,6 +229,7 @@ AutoML 기반 Ensemble 모델이 단일 모델 대비 **약 2~6% 성능 향상**
 ---
 
 # ⚙️ 실행 방법
+- Python 3.11버전에서 진행
 
 ```
 pip install-r requirements.txt

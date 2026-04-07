@@ -1,3 +1,9 @@
+# Virtual environments
+rayenv/
+venv/
+.venv/
+env/
+
 # Model artifacts
 outputs/ag_models/
 *.pkl
@@ -11,3 +17,5 @@ __pycache__/
 
 # Data (대용량 데이터는 필요시 주석 해제)
 # data/*.csv
+outputs
+.vscode
