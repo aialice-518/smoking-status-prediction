@@ -17,5 +17,7 @@ __pycache__/
 
 # Data (대용량 데이터는 필요시 주석 해제)
 # data/*.csv
-outputs
+outputs/ag_models/
+outputs/submission.csv
+!outputs/figures/
 .vscode
