@@ -59,7 +59,7 @@ EDA → Feature Engineering → Model Training → AutoML → Ensemble 과정을
 ├── notebooks/                     # 단계별 분석 노트북
 │   ├── 01_EDA.ipynb               # 데이터 탐색
 │   ├── 02_Preprocessing.ipynb     # 전처리 및 피처 엔지니어링
-│   ├── 03_Modeling.ipynb          # 모델 학습 및 튜닝
+│   ├── 03_modeling.ipynb          # 모델 학습 및 튜닝
 │   └── 04_Evaluation.ipynb        # 평가 및 시각화
 ├── outputs/                       # 모델 저장 및 제출 파일
 │   └── figures/                   # 시각화 이미지
@@ -126,7 +126,6 @@ EDA → Feature Engineering → Model Training → AutoML → Ensemble 과정을
 
 ### 하이퍼파라미터 튜닝
 
-- Ray Tune
 - Optuna
 
 튜닝 대상 모델
@@ -154,17 +153,17 @@ AutoGluon `best_quality`
 
 # 🏆 주요 결과
 
-> ⚠️ 아래는 예시 수치입니다. 노트북 실행 후 실제 결과로 업데이트해주세요.
-> 
-
 | Model | Accuracy | Precision | Recall | F1-score |
 | --- | --- | --- | --- | --- |
-| RandomForest | 0.74 | 0.72 | 0.68 | 0.70 |
-| LightGBM | 0.78 | 0.76 | 0.73 | 0.74 |
-| XGBoost | 0.77 | 0.75 | 0.72 | 0.73 |
-| **AutoGluon Ensemble** | **0.80** | **0.78** | **0.76** | **0.77** |
+| RandomForest | 0.7334 | 0.6384 | 0.6328 | 0.6353 |
+| LightGBM | 0.7283 | 0.6305 | 0.6282 | 0.6291 |
+| XGBoost | 0.7273 | 0.6291 | 0.6266 | 0.6277 |
+| Ensemble (RF+LGBM+XGB) | 0.7343 | 0.6379 | 0.6391 | 0.6382 |
+| **AutoGluon Best** | **0.7446** | - | - | - |
 
-AutoML 기반 Ensemble 모델이 단일 모델 대비 **약 2~6% 성능 향상**을 보였습니다.
+AutoGluon Best Model이 단일 모델 대비 **약 1~2% 성능 향상**을 보였습니다.
+
+> AutoGluon은 내부 10-Fold Bagging OOF score 기준이며 Precision/Recall/F1은 제공되지 않습니다.
 
 ---
 
@@ -172,9 +171,13 @@ AutoML 기반 Ensemble 모델이 단일 모델 대비 **약 2~6% 성능 향상**
 
 모델 분석에 사용한 주요 시각화입니다. (`04_Evaluation.ipynb` 실행 시 자동 생성)
 
-[제목 없음](https://www.notion.so/325be6468c338036b839c75b52db3f70?pvs=21)
+| 모델별 Accuracy 비교 | ROC Curve |
+|:---:|:---:|
+| ![model_comparison](outputs/figures/model_comparison.png) | ![roc_curve](outputs/figures/roc_curve.png) |
 
-[제목 없음](https://www.notion.so/325be6468c338021b012d1b365fc5a7c?pvs=21)
+| Confusion Matrix | Feature Importance |
+|:---:|:---:|
+| ![confusion_matrix](outputs/figures/confusion_matrix.png) | ![feature_importance](outputs/figures/feature_importance.png) |
 
 ---
 
@@ -219,7 +222,6 @@ AutoML 기반 Ensemble 모델이 단일 모델 대비 **약 2~6% 성능 향상**
 
 **하이퍼파라미터 튜닝**
 
-- Ray Tune
 - Optuna
 
 **클러스터링**
@@ -232,18 +234,22 @@ AutoML 기반 Ensemble 모델이 단일 모델 대비 **약 2~6% 성능 향상**
 - Python 3.11버전에서 진행
 
 ```
-pip install-r requirements.txt
+pip install -r requirements.txt
 ```
 
-`notebooks/` 폴더의 노트북을 **01 → 02 → 03 → 04 순서로 실행**하세요.
-
-`04_Evaluation.ipynb` 실행 시
+**노트북 실행** (`notebooks/` 폴더를 01 → 02 → 03 → 04 순서로 실행)
 
 ```
-outputs/figures/
+01_EDA.ipynb → 02_Preprocessing.ipynb → 03_modeling.ipynb → 04_Evaluation.ipynb
 ```
 
-경로에 시각화 이미지가 자동 저장됩니다.
+**단일 파일 실행**
+
+```
+python main.py
+```
+
+`04_Evaluation.ipynb` 실행 시 `outputs/figures/` 경로에 시각화 이미지가 자동 저장됩니다.
 
 ---
 
